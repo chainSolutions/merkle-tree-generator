@@ -1,0 +1,35 @@
+<!doctype html5>
+<html>
+<head>
+    <title>Merkle Tree</title>
+    <script src="bundle.js"></script>
+    <style>
+        #result {
+            font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+            height: 600px;
+            width: 800px;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+<body>
+    <form action="#" method="post">
+        <label>K = </label>
+        <input id="elements" type="text" value="10">
+        <input type="button" value="submit" onclick="onClick()">
+    </form>
+
+    <div>
+        <textarea id="result"></textarea>
+    </div>
+
+    <script>
+        function onClick() {
+            var n = parseInt(document.getElementById("elements").value, 10);
+            var result = buildTree(n*2);
+            console.log(result);
+            document.getElementById("result").innerText = JSON.stringify(result, null, 4);
+        }
+    </script>
+</body>
+</html>
