@@ -18,13 +18,27 @@ const randomInt = (low, high) => Math.floor(Math.random() * (high - low) + low)
 const randomIntInc = (low, high) => Math.floor(Math.random() * (high - low + 1) + low)
 
 const randomIntArray = (size, low, high) => {
+    if (size <= 0) {
+        return null
+    }
     var numbers = new Array(size)
     for (var i = 0; i < numbers.length; i++) {
         numbers[i] = randomInt(low, high)
     }
     return numbers
 }
-const buildRandomNumbers = (size) => randomIntArray(2 * size, 0, 1000)
+const buildRandomNumbers = (size) => randomIntArray(size, 0, 1000)
+
+const buildRandomSecrets = (size) => {
+    if (size <= 0) {
+        return null
+    }
+
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    const n = letters.length
+    const indices = randomIntArray(size, 0, n)
+    return indices.map(i => letters[i])
+}
 
 // Extend MerkleTree
 var MerkleTreeEx = function (layers, rebuilt) {
@@ -66,7 +80,7 @@ const buildTree = (elements, hashed) => {
 
     // check if power of 2
     if (!isPowerOf2(elements.length)) {
-        console.err('The number of leaves of the trees is restricted to powers of 2')
+        console.log('The number of leaves of the trees is restricted to powers of 2')
         return null
     }
 
@@ -107,5 +121,6 @@ const generateProofWithPartialMerkleTree = (partialMerkleTree, index, secretNumb
 module.exports = {
   generateProofWithPartialMerkleTree,
   buildTreeWithSecrets,
-  buildRandomNumbers
+  buildRandomNumbers,
+  buildRandomSecrets
 };
