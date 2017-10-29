@@ -5,8 +5,8 @@ import MerkleTree, {
     checkProof, checkProofOrdered,
     merkleRoot, checkProofSolidityFactory, checkProofOrderedSolidityFactory
 } from 'merkle-tree-solidity'
-import {buildRandomNumbers, buildRandomSecrets, buildTreeWithSecrets,
-  generateProofWithPartialMerkleTree
+import { buildRandomNumbers, buildRandomSecrets, buildTreeWithSecrets,
+  generateProofWithPartialMerkleTree, MerkleTreeEx
 } from './index'
 
 describe('Build randoms and secrets', () => {
@@ -24,35 +24,61 @@ describe('Build randoms and secrets', () => {
     it('check generated nummbers and secrets',  () => {
         let randoms = buildRandomNumbers(2)
         assert.isOk(randoms)
-        assert.isTrue(randoms instanceof Array)
-        assert.equal(2, randoms.length)
+        assert.isArray(randoms)
+        assert.lengthOf(randoms, 2)
         for (let i=0; i<randoms.length; i++) {
-            assert.isTrue(typeof randoms[i] == 'number')
+            assert.isNumber(randoms[i])
         }
 
         randoms = buildRandomNumbers(10)
         assert.isOk(randoms)
-        assert.isTrue(randoms instanceof Array)
-        assert.equal(10, randoms.length)
+        assert.isArray(randoms)
+        assert.lengthOf(randoms, 10)
         for (let i=0; i<randoms.length; i++) {
-            assert.isTrue(typeof randoms[i] == 'number')
+            assert.isNumber(randoms[i])
         }
 
         let secrets = buildRandomSecrets(2)
         assert.isOk(secrets)
-        assert.isTrue(secrets instanceof Array)
-        assert.equal(2, secrets.length)
+        assert.isArray(secrets)
+        assert.lengthOf(secrets, 2)
         for (let i=0; i<secrets.length; i++) {
-            assert.isTrue(typeof secrets[i] == 'string')
+            assert.isString(secrets[i])
         }
 
         secrets = buildRandomSecrets(10)
         assert.isOk(secrets)
-        assert.isTrue(secrets instanceof Array)
-        assert.equal(10, secrets.length)
+        assert.isArray(secrets)
+        assert.lengthOf(secrets, 10)
         for (let i=0; i<secrets.length; i++) {
-            assert.isTrue(typeof secrets[i] == 'string')
+            assert.isString(secrets[i])
         }
+    })
+})
+
+describe('Build MerkleTree', () => {
+    let secrets
+    let numbers
+    let merkleTree
+
+    before(() => {
+        secrets = ['A', 'B', 'C', 'D']
+        numbers = buildRandomNumbers(secrets.length)
+        merkleTree = buildTreeWithSecrets(secrets, numbers)
+    })
+
+    it('convert to/from JSON', () => {
+        const json = merkleTree.toJson()
+        assert.isString(json)
+
+        const layers = JSON.parse(json)
+        assert.equal(merkleTree.height(), layers.length)
+        assert.sameMembers(merkleTree.elements.map(e => e.toString('hex')), layers[0])
+
+        const newTree = MerkleTreeEx.fromJson(json)
+        assert.isOk(newTree)
+        assert.equal(merkleTree.getRoot().toString('hex'), newTree.getRoot().toString('hex'))
+        assert.sameMembers(merkleTree.elements.map(e => e.toString('hex')), newTree.elements.map(e => e.toString('hex')))
     })
 })
 

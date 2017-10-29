@@ -75,6 +75,10 @@ MerkleTreeEx.prototype.getLeaf = function (index) {
     return this.layers[leafLevelIndex][index]
 }
 
+MerkleTreeEx.prototype.height = function () {
+    return this.layers.length
+}
+
 const buildTree = (elements, hashed) => {
     if (!elements) return null
 
@@ -122,5 +126,6 @@ module.exports = {
   generateProofWithPartialMerkleTree,
   buildTreeWithSecrets,
   buildRandomNumbers,
-  buildRandomSecrets
+  buildRandomSecrets,
+  MerkleTreeEx
 };
